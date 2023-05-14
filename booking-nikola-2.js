@@ -115,354 +115,344 @@ let frame = [
 
 ]
 
+//displayChange();
 
-document.querySelectorAll('[data-trigger="location"]').forEach(function(trigger) {
-  trigger.addEventListener('click', function() {
-    document.querySelectorAll('[data-type="location"]').forEach(function(location) {
-      location.classList.toggle('show');
-    });
-  });
+$('[data-trigger="location"]').on('click', function() {
+  $('[data-type="location"]').toggleClass('show');
 });
 
-document.querySelectorAll('[data-trigger="doctor"]').forEach(function(trigger) {
-  trigger.addEventListener('click', function() {
-    document.querySelectorAll('[data-type="doctor"]').forEach(function(doctor) {
-      doctor.classList.toggle('show');
-      document.querySelector('.doctor--hours').classList.toggle('hide');
-    });
-  });
+$('[data-trigger="doctor"]').on('click', function() {
+  $('[data-type="doctor"]').toggleClass('show');
+  $('.doctor--hours').toggleClass('hide')
 });
 
+// data-type doctor start //
+$('[data-type="doctor"]').on('click', function() {
+  activeTab = $('[data-tab]:visible').data('tab')
+  doctorID = $(this).data('id')
+  $('[data-click="doctor"]').hide()
+  $('[office-hour]').hide()
+  if(locationID){
+    if($('[data-tab]:visible [data-type="doctor"]:visible').length !== 1){
+      getIframe()
+    }
+  }
 
-document.querySelectorAll('[data-type="doctor"]').forEach(function(element) {
-  element.addEventListener('click', function() {
-    activeTab = document.querySelector('[data-tab]:not([style*="display: none"])').dataset.tab;
-    doctorID = this.dataset.id;
-    document.querySelectorAll('[data-click="doctor"]').forEach(function(el) {
-      el.style.display = 'none';
-    });
-    document.querySelectorAll('[office-hour]').forEach(function(el) {
-      el.style.display = 'none';
-    });
-    if(locationID) {
-      if(document.querySelector('[data-tab]:not([style*="display: none"]) [data-type="doctor"]:not([style*="display: none"])').length !== 1) {
-        getIframe();
+  if ( $('.show[data-type="doctor"]').length > 1 ) { // dropdown open
+    console.log('open')
+    let id=$(this).data('id')
+    $(`[data-id="${id}"]`).siblings().toggleClass('show')
+  } else { // dropdown closed
+    console.log('closed')
+    $(`[data-id="${id}"]`).siblings().toggleClass('show')
+  }
+
+  $('[data-type="location"]').hide()
+  $('[data-locdiv]').hide()
+
+  $('[data-type="location"]').each(function(){
+    //console.log($(this).data('id'))
+    let x = $(this).data('id')
+    if(x.includes(doctorID)){
+      $(this).css('display','');
+      $(`[data-locdiv="${x}"]`).show()
+    }
+  })
+
+  if(activeTab!=='selLocation'&&activeTab!=='iframe'){
+    $('[data-tab="selLocation"]').show()
+    $(`[data-tab="${activeTab}"]`).hide()
+  }
+
+  if($(this).hasClass('curloc')){
+    $('[data-type="map"]').toggleClass('hide')
+    $(this).find('[data-type="map"]').removeClass('hide')
+  }
+})
+// data-type doctor end//
+
+// data-type location start //
+$('[data-type="location"]').on('click', function() {
+  //$('[data-type="location"]').css('display', '')
+  activeTab = $('[data-tab]:visible').data('tab')
+  locationID = $(this).data('id')
+  let id=$(this).data('id')
+  $('[data-type="doctor"]').hide()
+  $('[data-docdiv]').hide()
+  $('[data-click="location"]').hide()
+  officeHour()
+  if(doctorID){
+    if($('[data-tab]:visible [data-type="location"]:visible').length !== 1){
+      getIframe()
+    }
+  }
+
+  //$(`[data-tab="${activeTab}"]`).addClass('curTab')*/
+
+  if(activeTab!=='selDoctor'&&activeTab!=='iframe'){
+    $('[data-tab="selDoctor"]').show()
+    $(`[data-tab="${activeTab}"]`).hide()
+  }
+
+  $('[data-type="doctor"]').each(function(){
+    //console.log($(this).data('id'))
+    let x = $(this).data('id')
+    let opis = locationID.split(' ')
+    for(o of opis){
+      let curr = o.split(':')
+      if(curr[0] == x){
+        $(this).css('display','')
+        $(`[data-docdiv="${x}"]`).show()
       }
     }
+  })
 
-    if(document.querySelectorAll('.show[data-type="doctor"]').length > 1) { // dropdown open
-      console.log('open');
-      let id = this.dataset.id;
-      document.querySelector(`[data-id="${id}"]`).parentNode.querySelectorAll('[data-type="doctor"]').forEach(function(el) {
-        if(el.dataset.id !== id) {
-          el.parentNode.classList.toggle('show');
-        }
-      });
-    } else { // dropdown closed
-      console.log('closed');
-      this.parentNode.querySelectorAll('[data-type="doctor"]').forEach(function(el) {
-        if(el.dataset.id !== doctorID) {
-          el.parentNode.classList.toggle('show');
-        }
-      });
-    }
+  if($(this).hasClass('curloc')){
+    $('[data-type="map"]').toggleClass('hide')
+    $(`[data-id="${id}"]`).find('[data-type="map"]').removeClass('hide')
+    $(`[data-id="${id}"]`).removeClass('curloc')
+  }
 
-    document.querySelectorAll('[data-type="location"]').forEach(function(el) {
-      let x = el.dataset.id;
-      if(x.includes(doctorID)) {
-        el.style.display = '';
-        document.querySelector(`[data-locdiv="${x}"]`).style.display = 'block';
-      } else {
-        el.style.display = 'none';
-        document.querySelector(`[data-locdiv="${x}"]`).style.display = 'none';
-      }
-    });
+  if ( $('.show[data-type="location"]').length > 1 ) { // dropdown open
+    console.log('open')
+    console.log(id)
+    $(`[data-id="${id}"]`).siblings().toggleClass('show')
+    $('.dropdown--toggle__location').hide()
 
-    if(activeTab !== 'selLocation' && activeTab !== 'iframe') {
-      document.querySelector('[data-tab="selLocation"]').style.display = 'block';
-      document.querySelector(`[data-tab="${activeTab}"]`).style.display = 'none';
-    }
+  } else { // dropdown closed
+    console.log('closed')
+    $(`[data-id="${id}"]`).find('[data-type="map"]').toggleClass('hide')
+    $(`[data-id="${id}"]`).siblings().toggleClass('show')
+    $('[data-type="map"]').toggleClass('hide')
+  }
+})
+// data-type location end //
 
-    if(this.classList.contains('curloc')) {
-      document.querySelector('[data-type="map"]').classList.toggle('hide');
-      this.querySelector('[data-type="map"]').classList.remove('hide');
-    }
-  });
-});
+// data-type location start //
+$('[data-type="location"]').on('click', function() {
+  $('.dropdown--toggle__location').hide()
+  $('.collection-list-wrapper-location').css('position', 'static')
+  $('[data-type="map"]').toggleClass('hide')
+})
+// data-type location end //
 
-document.querySelectorAll('[data-type="location"]').forEach(function(element) {
-  element.addEventListener('click', function() {
-    activeTab = document.querySelector('[data-tab]:not([style*="display: none"])').dataset.tab;
-    locationID = this.dataset.id;
-    let id = this.dataset.id;
-    document.querySelectorAll('[data-type="doctor"]').forEach(function(doc) {
-      let x = doc.dataset.id;
-      let opis = locationID.split(' ');
-      for (o of opis) {
-        let curr = o.split(':');
-        if (curr[0] === x) {
-          doc.style.display = '';
-          document.querySelector(`[data-docdiv="${x}"]`).style.display = 'block';
-        }
-      }
-    });
-    document.querySelectorAll('[data-click="location"]').forEach(function(click) {
-      click.style.display = 'none';
-    });
-    officeHour();
-    if (doctorID) {
-      if (document.querySelector('[data-tab]:not([style*="display: none"]) [data-type="location"]:not([style*="display: none"])').length !== 1) {
-        getIframe();
-      }
-    }
-    if (activeTab !== 'selDoctor' && activeTab !== 'iframe') {
-      document.querySelector('[data-tab="selDoctor"]').style.display = 'block';
-      document.querySelector(`[data-tab="${activeTab}"]`).style.display = 'none';
-    }
-    if (this.classList.contains('curloc')) {
-      document.querySelector('[data-type="map"]').classList.toggle('hide');
-      document.querySelector(`[data-id="${id}"] [data-type="map"]`).classList.remove('hide');
-      this.classList.remove('curloc');
-    }
-    if (document.querySelectorAll('.show[data-type="location"]').length > 1) { // dropdown open
-      console.log('open');
-      console.log(id);
-      document.querySelectorAll(`[data-id="${id}"] ~ [data-type="location"]`).forEach(function(sibling) {
-        sibling.classList.toggle('show');
-      });
-      document.querySelector('.dropdown--toggle__location').style.display = 'none';
-    } else { // dropdown closed
-      console.log('closed');
-      document.querySelectorAll(`[data-id="${id}"] [data-type="map"]`).forEach(function(map) {
-        map.classList.toggle('hide');
-      });
-      document.querySelectorAll(`[data-id="${id}"] ~ [data-type="location"]`).forEach(function(sibling) {
-        sibling.classList.toggle('show');
-      });
-      document.querySelector('[data-type="map"]').classList.toggle('hide');
-    }
-  });
-});
+// data-type doctor start //
+$('[data-type="doctor"]').on('click', function() {
+  $('.dropdown--toggle__doctor').hide()
+  $('.doctor--hours').toggleClass('hide')
+})
+// data-type doctor end //
 
-document.querySelectorAll('[data-type="location"]').forEach(function(elem) {
-  elem.addEventListener('click', function() {
-    document.querySelector('.dropdown--toggle__location').style.display = 'none';
-    document.querySelector('.collection-list-wrapper-location').style.position = 'static';
-    document.querySelector('[data-type="map"]').classList.toggle('hide');
-  });
-});
+// data-click start //
+$('[data-click]').on('click', (event) => {
+  let target = $(event.currentTarget).data('click');
 
-document.querySelectorAll('[data-type="doctor"]').forEach(function(doctor) {
-  doctor.addEventListener('click', function() {
-    document.querySelector('.dropdown--toggle__doctor').style.display = 'none';
-    document.querySelector('.doctor--hours').classList.toggle('hide');
-  });
-});
-
-document.querySelectorAll('[data-click]').forEach(function(item) {
-  item.addEventListener('click', function(event) {
-    let target = event.currentTarget.dataset.click;
-
-    if(target === 'doctor'){
-      if(locationID){
-        document.querySelector('[data-tab="selDoctor"]').style.display = "block";
-      }else{
-        document.querySelector('[data-tab="allDoctor"]').style.display = "block";
-        document.querySelector('[data-triggerdoc="all"]').click();
-      }
+  if(target === 'doctor'){
+    if(locationID){
+      $('[data-tab="selDoctor"]').show()
     }else{
-      document.querySelector('[data-tab="allLocation"]').style.display = "block";
-      document.querySelector('[data-triggerloc="all"]').click();
+      $('[data-tab="allDoctor"]').show()
+      $('[data-triggerdoc="all"]').click()
     }
-    document.querySelector('[data-tab="default"]').style.display = "none";
-  });
+  }else{
+    $('[data-tab="allLocation"]').show()
+    $('[data-triggerloc="all"]').click()
+  }
+  $('[data-tab="default"]').hide()
 });
+// data-click end //
 
-document.querySelectorAll('[data-location]').forEach(function(element) {
-  element.addEventListener('click', function() {
-    activeTab = document.querySelector('[data-tab]:not([style*="display: none"])').dataset.tab;
-    locationID = this.dataset.location;
-    document.querySelectorAll('[data-type="doctor"]').forEach(function(doc) {
-      doc.style.display = 'none';
-    });
-    document.querySelectorAll('[data-docdiv]').forEach(function(docdiv) {
-      docdiv.style.display = 'none';
-    });
-    dataLocation(locationID, activeTab);
-    officeHour();
-  });
-});
+// data-location //
+$('[data-location]').on('click', function(){
+  activeTab = $('[data-tab]:visible').data('tab')
+  //console.log(activeTab)
+  locationID = $(this).data('location')
+  $('[data-type="doctor"]').hide()
+  $('[data-docdiv]').hide()
+  dataLocation(locationID,activeTab)
+  officeHour()
+})
 
-function dataLocation(locationID, activeTab) {
-  const doctors = document.querySelectorAll('[data-doctor]');
-  doctors.forEach(doctor => {
-    const target = doctor.dataset.doctor;
-    if (locationID.includes(target)) {
-      const docdiv = document.querySelector(`[data-docdiv="${target}"]`);
-      docdiv.style.display = 'block';
-      const id = document.querySelector(`[data-id="${target}"]`);
-      id.style.display = 'block';
+function dataLocation(locationID,activeTab){
+  //console.log(locationID)
+  $('[data-tab="selDoctor"] [data-doctor]').each(function(){
+    let target = $(this).data('doctor')
+    if(locationID.includes(target)){
+      $(`[data-docdiv="${target}"]`).show()
+      $(`[data-id="${target}"]`).css('display', '')
     }
-  });
+  })
 
-  const showLocations = document.querySelectorAll('.show[data-type="location"]');
-  if (showLocations.length > 1) {
-    const tab = document.querySelector(`[data-tab="${activeTab}"]`);
-    const location = tab.querySelector(`[data-id="${locationID}"]`);
-    location.click();
-  } else {
-    const id = document.querySelector(`[data-id="${locationID}"]`);
-    id.classList.toggle('show');
-    id.classList.toggle('curloc');
-    const map = id.querySelector('[data-type="map"]');
-    map.classList.remove('hide');
-    const dropdownLocation = document.querySelector('.dropdown--toggle__location');
-    dropdownLocation.style.display = 'none';
-    const tab = document.querySelector(`[data-tab="${activeTab}"]`);
-    tab.style.display = 'none';
-    const selDoctor = document.querySelector('[data-tab="selDoctor"]');
-    selDoctor.style.display = 'block';
+
+  if($('.show[data-type="location"]').length > 1){
+    $(`[data-tab="${activeTab}"]`).find(`[data-id="${locationID}"]`).click()
+  }else{
+    $(`[data-id="${locationID}"]`).toggleClass('show')
+    $(`[data-id="${locationID}"]`).toggleClass('curloc')
+    $(`[data-id="${locationID}"] [data-type="map"]`).removeClass('hide')
+    $('.dropdown--toggle__location').hide()
+    $(`[data-tab="${activeTab}"]`).hide()
+    $('[data-tab="selDoctor"]').show()
   }
 
-  if (activeTab === 'selLocation') {
-    getIframe();
+
+  if(activeTab==='selLocation'){
+    getIframe()
+  }else{
+
+  }
+}
+// data-location end //
+
+// data-doctor start //
+$('[data-doctor]').on('click', function(){
+  activeTab = $('[data-tab]:visible').data('tab')
+  //console.log(activeTab)
+  doctorID = $(this).data('doctor')
+  console.log($(this).data('doctor'))
+  $('[data-type="location"]').hide()
+  $('[data-locdiv]').hide()
+  //$(`[data-id="${doctorID}"]`).toggleClass('show')
+  dataDoctor(doctorID,activeTab)
+})
+
+function dataDoctor(doctorID,activeTab){
+  //console.log('da')
+  $('[data-tab="selLocation"] [data-location]').each(function(){
+    let target = $(this).data('location')
+    if(target.includes(doctorID)){
+      $(`[data-locdiv="${target}"]`).show()
+      $(`[data-id="${target}"]`).css('display', '')
+    }
+  })
+
+  if($('.show[data-type="doctor"]').length > 1){
+    $(`[data-tab="${activeTab}"]`).find(`[data-id="${doctorID}"]`).click()
+  }else{
+    $(`[data-id="${doctorID}"]`).toggleClass('show')
+    $(`[data-id="${doctorID}"]`).toggleClass('curdoc')
+    $('.dropdown--toggle__doctor').hide()
+    $('.doctor--hours').hide()
+    $(`[data-tab="${activeTab}"]`).hide()
+    $('[data-tab="selLocation"]').show()
+  }
+
+  if(locationID){
+    getIframe()
+  }else{
   }
 }
 
-document.querySelectorAll('[data-doctor]').forEach(function(doctor){
-  doctor.addEventListener('click', function(){
-    activeTab = document.querySelector('[data-tab]:not([style*="display: none"])').dataset.tab;
-    //console.log(activeTab)
-    doctorID = this.dataset.doctor;
-    console.log(this.dataset.doctor)
-    document.querySelectorAll('[data-type="location"]').forEach(function(location){
-      location.style.display = 'none';
-    });
-    document.querySelectorAll('[data-locdiv]').forEach(function(locdiv){
-      locdiv.style.display = 'none';
-    });
-    //$(`[data-id="${doctorID}"]`).toggleClass('show')
-    dataDoctor(doctorID,activeTab);
-  });
-});
-
-function dataDoctor(doctorID,activeTab) {
-  document.querySelectorAll('[data-doctor]').forEach(function(doctor){
-    doctor.addEventListener('click', function(){
-      activeTab = document.querySelector('[data-tab]:not([style*="display: none"])').dataset.tab;
-      doctorID = this.dataset.doctor;
-      document.querySelectorAll('[data-type="location"]').forEach(function(location){
-        location.style.display = 'none';
-      });
-      document.querySelectorAll('[data-locdiv]').forEach(function(locdiv){
-        locdiv.style.display = 'none';
-      });
-      dataDoctor(doctorID, activeTab);
-    });
-  });
+function officeHour(){
+  $('[office-hour]').hide()
+  $(`[office-hour="${locationID}"]`).show()
 }
+// data-doctor end //
 
-function officeHour() {
-  const officeHours = document.querySelectorAll('[office-hour]');
-  for (let i = 0; i < officeHours.length; i++) {
-    officeHours[i].style.display = 'none';
-  }
-  const selectedOfficeHour = document.querySelector(`[office-hour="${locationID}"]`);
-  selectedOfficeHour.style.display = 'block';
-}
-
-function getIframe() {
-  document.querySelectorAll('[data-tab]').forEach(function(tab) {
-    tab.style.display = 'none';
-  });
-  document.querySelector('[data-tab="iframe"]').style.display = 'block';
-  document.querySelector('.booking--loader').style.display = 'block';
-  officeHour();
-  let office = locationID.split(' ');
-  for (let i = 0; i < office.length; i++) {
-    let oSplit = office[i].split(':');
-    if (oSplit[0] === doctorID) {
-      officeID = oSplit[1];
-      for (let j = 0; j < frame.length; j++) {
-        if (frame[j].officeID === parseInt(officeID)) {
-          frameID = frame[j].iframe;
-          url = 'https://drchrono.com/scheduling/offices/' + frameID;
-          document.querySelector('[data-content="iframe"] iframe').setAttribute('src', url);
+// getIframe() start //
+function getIframe(){
+  $('[data-tab]').hide()
+  $('[data-tab="iframe"]').show()
+  $('.booking--loader').show()
+  officeHour()
+  // $('.doctor--hours').css('display', '')
+  let office = locationID.split(' ')
+  for (o of office){
+    let oSplit = o.split(':')
+    if(oSplit[0]==doctorID){
+      //$('iframe').remove()
+      //$('[data-content="iframe"]').remove()
+      officeID=oSplit[1]
+      //console.log("office is ",officeID)
+      for(f of frame){
+        if(f.officeID===parseInt(officeID)){
+          frameID = f.iframe
+          url = `https://drchrono.com/scheduling/offices/${frameID}`
+          //console.log(url)
+          //$('[data-content="iframe"]').append($iframe)
+          $('[data-content="iframe"] iframe').attr('src',url)
         }
       }
     }
   }
 }
+// getIframe() end //
 
+// data-btn close start //
 let referrer, referrerUrl, previousPath;
-
-function findPrevPath() {
-  let referrer = document.referrer;
-  if (referrer !== '') {
-    let referrerUrl = new URL(referrer);
-    let previousPath = referrerUrl.pathname;
+function findPrevPath(){
+  referrer = document.referrer;
+  if(referrer!==''){
+    referrerUrl = new URL(referrer);
+    previousPath = referrerUrl.pathname;
     //console.log(`Previous page path: ${previousPath}`);
   }
 }
 
-document.querySelector('[data-btn="close"]').addEventListener('click', function() {
-  findPrevPath();
+$('[data-btn="close"]').on('click', function(){
+  findPrevPath()
   locationID = '';
   doctorID = '';
-
-  if (typeof history.back === 'undefined' || referrer === '') {
+  if (typeof history.back === 'undefined' || referrer ==='') {
     window.location.href = 'https://mfa-podiatry.webflow.io/';
   } else {
     if(document.referrer){
-      window.location.href = document.referrer;
-    } else {
+      window.location.href = document.referrer
+    }else{
       history.back();
     }
   }
-});
 
-document.querySelector('[data-btn="prev"]').addEventListener('click', function(){
-  let activeTab = document.querySelector('[data-tab]:not([style*="display: none"])').dataset.tab;
+})
+// data-btn close end //
+
+// data-btn prev start //
+$('[data-btn="prev"]').on('click', function(){
+  activeTab = $('[data-tab]:visible').data('tab')
   if (typeof history.back !== 'undefined' && activeTab !== 'iframe') {
     history.back();
   } else {
-    let prevTab = document.querySelector('[data-tab].curTab').dataset.tab;
+    let prevTab = $('[data-tab].curTab').data('tab')
+
 
     if(activeTab==='allLocation' || activeTab==='allDoctor'){
-      prevTab = 'default';
+      prevTab = 'default'
     }
 
-    document.addEventListener('DOMContentLoaded', function(){
-      activeTab = document.querySelector('[data-tab]:not([style*="display: none"])').dataset.tab;
+    $(document).ready(function(){
+      activeTab = $('[data-tab]:visible').data('tab')
       if(locationID && !doctorID){
+        //prev = allDoctor
         if(activeTab === 'selDoctor'){
-          prev = 'default';
+          prev = 'default'
         }
       }else if(!locationID && doctorID){
         if(activeTab === 'selLocation'){
-          prev = 'default';
+          prev = 'default'
         }
       }else{
-        if(activeTab === 'iframe'){
-          prev = 'selDoctor';
-        }else if(activeTab === 'selDoctor'){
-          prev = 'selLocation';
+        if(activeTab==='iframe'){
+          prev = 'selDoctor'
+        }else if(activeTab==='selDoctor'){
+          prev = 'selLocation'
         }else{
-          prev = 'default';
+          prev = 'default'
         }
 
       }
 
-      document.querySelectorAll('[data-tab]').forEach(function(tab){
-        tab.style.display = 'none';
-      });
-      document.querySelector(`[data-tab="${prev}"]`).style.display = 'block';
-    });
+      $(`[data-tab]`).hide()
+      $(`[data-tab="${prev}"]`).show()
+    })
   }
 });
+// data-btn prev end //
 
+// get the iframe element
 const iframe = document.querySelector('[data-content="iframe"] iframe');
+// add a load event listener to the iframe
 iframe.addEventListener('load', function() {
-  const bookingLoader = document.querySelector('.booking--loader');
-  bookingLoader.style.display = 'none';
+  // code to execute when the iframe is loaded
+  $('.booking--loader').hide()
 });
+
