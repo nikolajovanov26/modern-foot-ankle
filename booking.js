@@ -1,3 +1,4 @@
+locationID, doctorID, officeID, activeDiv, impLoc, impDoc;
 init();
 changeTab();
 document.querySelector('[data-tab="default"]').style.display = 'block';
@@ -13,7 +14,6 @@ closeButton();
 initializeIframe();
 
 function init() {
-    let locationID, doctorID, officeID, activeDiv, impLoc, impDoc;
     frame = [];
     iframes = document.querySelectorAll('.iframe-text');
     officeIds = document.querySelectorAll('.officeid-text');
