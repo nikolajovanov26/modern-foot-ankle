@@ -16,6 +16,7 @@ closeButton();
 initializeIframe();
 
 function init() {
+    frame = [];
     iframes = document.querySelectorAll('.iframe-text');
     officeIds = document.querySelectorAll('.officeid-text');
     for (let i = 0; i < officeIds.length; i++) {
