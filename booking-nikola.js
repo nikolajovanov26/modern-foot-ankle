@@ -441,41 +441,55 @@ function closeButton() {
 }
 
 function prevButton() {
-  backBtns = document.querySelectorAll('.back--btn');
+  document.querySelector('[data-btn="close"]').addEventListener('click', function() {
+    findPrevPath();
+    let locationID = '';
+    let doctorID = '';
 
-  backBtns.forEach(function(backBtn) {
-
-    backBtn.addEventListener('click', function () {
-      closeTabs();
-
-      if (activeTab === 'default') {
-        history.back();
-      }
-
-      if (activeTab === 'allLocation' || activeTab === 'allDoctor') {
-         prevTab = activeTab;
-         activeTab = 'default';
-      }
-
-      if (activeTab === 'selDoctor') {
-        prevTab = activeTab;
-        activeTab = 'allLocation';
-      }
-
-      if (activeTab === 'selLocation') {
-        prevTab = activeTab;
-        activeTab = 'allDoctor';
-      }
-
-      if (activeTab === 'iframe') {
-        activeTab = prevTab;
-        prevTab = activeTab;
-      }
-
-      document.querySelector('[data-tab="' + activeTab + '"]').style.display = 'block';
-    });
+    if (typeof history.back !== 'function' || !document.referrer) {
+      window.location.href = 'https://mfa-podiatry.webflow.io/';
+    } else {
+      window.location.href = document.referrer;
+    }
   });
 }
+
+// function prevButton() {
+//   backBtns = document.querySelectorAll('.back--btn');
+//
+//   backBtns.forEach(function(backBtn) {
+//
+//     backBtn.addEventListener('click', function () {
+//       closeTabs();
+//
+//       if (activeTab === 'default') {
+//         history.back();
+//       }
+//
+//       if (activeTab === 'allLocation' || activeTab === 'allDoctor') {
+//          prevTab = activeTab;
+//          activeTab = 'default';
+//       }
+//
+//       if (activeTab === 'selDoctor') {
+//         prevTab = activeTab;
+//         activeTab = 'allLocation';
+//       }
+//
+//       if (activeTab === 'selLocation') {
+//         prevTab = activeTab;
+//         activeTab = 'allDoctor';
+//       }
+//
+//       if (activeTab === 'iframe') {
+//         activeTab = prevTab;
+//         prevTab = activeTab;
+//       }
+//
+//       document.querySelector('[data-tab="' + activeTab + '"]').style.display = 'block';
+//     });
+//   });
+// }
 
 function initializeIframe() {
   const iframe = document.querySelector('[data-content="iframe"] iframe');
