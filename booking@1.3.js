@@ -66,7 +66,6 @@ function dataTypeDoctor() {
                     }
                 });
             } else { // dropdown closed
-                console.log('closed')
                 document.querySelector(`[data-id="${id}"]`).parentNode.childNodes.forEach(function (node) {
                     if (node.dataset.id !== id) {
                         node.classList.toggle('show');
@@ -110,12 +109,9 @@ function dataTypeLocation() {
 
             officeHour();
 
-            console.log(1)
             if (doctorID) {
-                console.log(2)
                 if (document.querySelectorAll('[data-tab]:not([style*="display: none"]) [data-type="location"]:not([style*="display: none"])').length !== 1) {
                     getIframe();
-                    console.log(3)
                 }
             }
 
@@ -146,7 +142,6 @@ function dataTypeLocation() {
 
 
             if (document.querySelectorAll('.show[data-type="location"]').length > 1) { // dropdown open
-                console.log(id);
                 let siblings = Array.from(document.querySelectorAll('[data-id="' + id + '"] [data-type="location"]'));
                 siblings.forEach(sibling => sibling.classList.toggle('show'));
                 document.querySelector('.dropdown--toggle__location').style.display = 'none';
@@ -223,11 +218,8 @@ function dataLocation(locationID, activeTab) {
     });
 
     if (document.querySelectorAll('.show[data-type="location"]').length > 1) {
-        console.log(activeTab);
-        console.log(locationID)
         document.querySelector('[data-id="' + locationID + '"]').click()
     } else {
-        // console.log(document.querySelectorAll('[data-id="' + locationID + '"]'))
         document.querySelectorAll('[data-id="' + locationID + '"]').forEach(element => element.classList.toggle('show'));
         document.querySelectorAll('[data-id="' + locationID + '"]').forEach(element => element.classList.toggle('curloc'));
         document.querySelectorAll('[data-id="' + locationID + '"] [data-type="map"]').forEach(element => element.classList.remove('hide'));
@@ -297,12 +289,10 @@ function getIframe() {
         let oSplit = o.split(':')
         if (oSplit[0] === doctorID) {
             officeID = oSplit[1]
-            console.log(frame)
             frame.forEach(f => {
-                console.log(3432)
-                console.log(f.officeID)
+                console.log(f.officeID.innerHTML)
                 console.log(parseInt(officeID))
-                if (f.officeID === parseInt(officeID)) {
+                if (f.officeID.innerHTML === parseInt(officeID)) {
                     frameID = f.iframe
                     url = 'https://drchrono.com/scheduling/offices/' + frameID
                     document.querySelector('[data-content="iframe"] iframe').src = url
