@@ -44,7 +44,7 @@ function dataTriggers() {
 function dataTypeDoctor() {
     document.querySelectorAll('[data-type="doctor"]')
         .forEach(trigger => trigger.addEventListener("click", (e) => {
-            activeTab = document.querySelector('[data-tab]:not([style*="display: block"])').dataset.tab;
+            activeTab = document.querySelector('[data-tab]:not([style*="display: none"])').dataset.tab;
             doctorID = trigger.dataset.id;
             id = trigger.dataset.id;
 
@@ -99,7 +99,7 @@ function dataTypeDoctor() {
 function dataTypeLocation() {
     document.querySelectorAll('[data-type="location"]')
         .forEach(trigger => trigger.addEventListener("click", (e) => {
-            activeTab = document.querySelector('[data-tab]:not([style*="display: block"])').dataset.tab;
+            activeTab = document.querySelector('[data-tab]:not([style*="display: none"])').dataset.tab;
             locationID = trigger.dataset.id;
             id = trigger.dataset.id;
 
@@ -290,11 +290,7 @@ function getIframe() {
         if (oSplit[0] === doctorID) {
             officeID = oSplit[1]
             frame.forEach(f => {
-                console.log(f.officeID.innerHTML)
-                console.log(parseInt(officeID))
-                console.log(parseInt(f.officeID.innerHTML) == parseInt(officeID))
                 if (parseInt(f.officeID.innerHTML) == parseInt(officeID)) {
-                    console.log(12)
                     frameID = f.iframe
                     url = 'https://drchrono.com/scheduling/offices/' + frameID
                     document.querySelector('[data-content="iframe"] iframe').src = url
