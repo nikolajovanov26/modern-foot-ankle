@@ -1,4 +1,4 @@
-locationID, doctorID, officeID, activeDiv, impLoc, impDoc;
+var locationID, doctorID, officeID, activeDiv, impLoc, impDoc;
 init();
 changeTab();
 document.querySelector('[data-tab="default"]').style.display = 'block';
