@@ -21,8 +21,8 @@ function init() {
     officeIds = document.querySelectorAll('.officeid-text');
     for (let i = 0; i < officeIds.length; i++) {
         const obj = {
-            officeID: officeIds[i],
-            iframe: iframes[i]
+            officeID: officeIds[i].innerHTML,
+            iframe: iframes[i].innerHTML
         };
         frame.push(obj);
     }
@@ -290,7 +290,7 @@ function getIframe() {
         if (oSplit[0] === doctorID) {
             officeID = oSplit[1]
             frame.forEach(f => {
-                if (parseInt(f.officeID.innerHTML) == parseInt(officeID)) {
+                if (f.officeID == parseInt(officeID)) {
                     frameID = f.iframe
                     url = 'https://drchrono.com/scheduling/offices/' + frameID
                     document.querySelector('[data-content="iframe"] iframe').src = url
