@@ -292,7 +292,9 @@ function getIframe() {
             frame.forEach(f => {
                 console.log(f.officeID.innerHTML)
                 console.log(parseInt(officeID))
-                if (parseInt(f.officeID.innerHTML) === parseInt(officeID)) {
+                console.log(parseInt(f.officeID.innerHTML) == parseInt(officeID))
+                if (parseInt(f.officeID.innerHTML) == parseInt(officeID)) {
+                    console.log(12)
                     frameID = f.iframe
                     url = 'https://drchrono.com/scheduling/offices/' + frameID
                     document.querySelector('[data-content="iframe"] iframe').src = url
