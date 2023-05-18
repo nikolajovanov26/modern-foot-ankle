@@ -99,9 +99,9 @@ function navigateDoctorRegion(newRegion) {
 
 function navigateLocationRegion(newRegion) {
     switch (newRegion) {
-        case 'location-region-all': doctorCards.forEach(card => showParent(card)); break;
-        case 'location-region-tampa': doctorCards.forEach(card => card.querySelector('.location-region').innerHTML === 'Tampa' ? showParent(card) : hideParent(card)); break;
-        case 'location-region-orlando': doctorCards.forEach(card => card.querySelector('.location-region').innerHTML === 'Orlando' ? showParent(card) : hideParent(card)); break;
+        case 'location-region-all': locationCards.forEach(card => showParent(card)); break;
+        case 'location-region-tampa': locationCards.forEach(card => card.querySelector('.location-region').innerHTML === 'Tampa' ? showParent(card) : hideParent(card)); break;
+        case 'location-region-orlando': locationCards.forEach(card => card.querySelector('.location-region').innerHTML === 'Orlando' ? showParent(card) : hideParent(card)); break;
     }
 }
 
