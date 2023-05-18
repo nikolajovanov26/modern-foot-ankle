@@ -7,6 +7,7 @@ iniDoctorCta();
 iniLocationCta();
 initializeIframe();
 iniRadioButtons();
+checkIncomingData()
 
 function initData() {
     frame = [];
@@ -158,17 +159,22 @@ function iniNavButtons() {
 
                 break;
             case 'iframe-tab':
+                if (prev === 'ref') {
+                    location.href = '/'
+                    break;
+                }
+
                 if (prev === 'all-doctors-tab') {
                     doctorId = null
                     navigateTab(doctorsTab)
                     navigateDoctorRegion('doctor-region-all')
                     populateSidebar()
-                } else {
-                    locationId = null
-                    navigateTab(locationsTab)
-                    populateSidebar()
-                    navigateLocationRegion('location-region-all')
                 }
+
+                locationId = null
+                navigateTab(locationsTab)
+                populateSidebar()
+                navigateLocationRegion('location-region-all')
 
                 break;
         }
@@ -419,4 +425,34 @@ function changeRadioButton(button, buttons, attribute) {
 function sidebarRadioData() {
     radioLocation.forEach(radio => radio.attributes['radio-location'].value.includes(doctorId) ? radio.style.display = 'flex' : hide(radio));
     radioDoctor.forEach(radio => locationId.includes(radio.attributes['radio-doctor'].value) ? radio.style.display = 'flex' : hide(radio));
+}
+
+function checkIncomingData() {
+    urlParams = new URLSearchParams(window.location.search);
+
+    doctorId = urlParams.get('doctorId');
+    locationId = urlParams.get('locationId');
+
+    if (doctorId && locationId) {
+        prev = 'ref'
+        navigateTab(iframeTab)
+        populateSidebar()
+        getIframe()
+
+        return
+    }
+
+    if (doctorId) {
+        navigateTab(locationsTab)
+        populateSidebar()
+
+        return;
+    }
+
+    if (locationId) {
+        navigateTab(doctorsTab)
+        populateSidebar()
+
+        return;
+    }
 }
