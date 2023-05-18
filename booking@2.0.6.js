@@ -1,5 +1,6 @@
 initData();
 iniNavButtons();
+checkIncomingData()
 iniStarterTab();
 iniDoctorsTab();
 iniLocationsTab();
@@ -7,7 +8,7 @@ iniDoctorCta();
 iniLocationCta();
 initializeIframe();
 iniRadioButtons();
-checkIncomingData()
+
 
 function initData() {
     frame = [];
