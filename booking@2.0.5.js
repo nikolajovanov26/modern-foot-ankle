@@ -36,7 +36,7 @@ function iniStarterTab() {
 }
 
 function iniDoctorsTab() {
-    doctorCards = document.querySelectorAll('[card="doctor"]');
+    doctorCards = document.querySelectorAll('[card-doctor]');
     doctorRegionAll = document.querySelector('#doctor-region-all');
     doctorRegionTampa = document.querySelector('#doctor-region-tampa');
     doctorRegionOrlando = document.querySelector('#doctor-region-orlando');
@@ -54,7 +54,7 @@ function iniDoctorsTab() {
 }
 
 function iniLocationsTab() {
-    locationCards = document.querySelectorAll('[card="location"]');
+    locationCards = document.querySelectorAll('[card-location]');
     locationRegionAll = document.querySelector('#location-region-all');
     locationRegionTampa = document.querySelector('#location-region-tampa');
     locationRegionOrlando = document.querySelector('#location-region-orlando');
@@ -170,6 +170,14 @@ function navigateTab(newTab) {
 
     show(newTab);
 
+    if (locationId) {
+        doctorCards.forEach(card => locationId.includes(card.attributes['card-doctor'].value) ? showParent(card) : hideParent(card));
+    }
+
+    if (doctorId)  {
+        locationCards.forEach(card => card.attributes['card-location'].value.includes(doctorId) ? showParent(card) : hideParent(card));
+    }
+
     if (newTab.id !== 'starter-tab') {
         hide(starterText)
         show(backButton)
@@ -185,6 +193,12 @@ function navigateDoctorRegion(newRegion) {
         case 'doctor-region-tampa': doctorCards.forEach(card => card.querySelector('.doctor-region').innerHTML === 'Tampa' ? showParent(card) : hideParent(card)); break;
         case 'doctor-region-orlando': doctorCards.forEach(card => card.querySelector('.doctor-region').innerHTML === 'Orlando' ? showParent(card) : hideParent(card)); break;
     }
+
+    if (locationId) {
+        doctorCards.forEach(card => {
+            if (!locationId.includes(card.attributes['card-doctor'].value))  hideParent(card)
+        });
+    }
 }
 
 function navigateLocationRegion(newRegion) {
@@ -192,6 +206,12 @@ function navigateLocationRegion(newRegion) {
         case 'location-region-all': locationCards.forEach(card => showParent(card)); break;
         case 'location-region-tampa': locationCards.forEach(card => card.querySelector('.location-region').innerHTML === 'Tampa' ? showParent(card) : hideParent(card)); break;
         case 'location-region-orlando': locationCards.forEach(card => card.querySelector('.location-region').innerHTML === 'Orlando' ? showParent(card) : hideParent(card)); break;
+    }
+
+    if (doctorId) {
+        locationCards.forEach(card => {
+            if (card.attributes['card-location'].value.includes(doctorId))  hideParent(card)
+        });
     }
 }
 
