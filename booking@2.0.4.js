@@ -2,8 +2,20 @@ iniNavButtons();
 iniStarterTab();
 iniDoctorsTab();
 iniLocationsTab();
+iniDoctorCta();
+iniLocationCta();
 
 function iniStarterTab() {
+    doctorId = null;
+    locationId = null;
+
+    map = document.querySelector('#booking-map-sidebar');
+    sidebarDoctor = document.querySelector('#booking-doctor-sidebar');
+    sidebarLocation = document.querySelector('#booking-locations-sidebar');
+    sidebarDoctorPlaceholder = document.querySelector('#sidebar-doctor-placeholder');
+    sidebarLocationPlaceholder = document.querySelector('#sidebar-location-placeholder');
+
+    starterText = document.querySelector('.booking-starter-p');
     selectDoctor = document.querySelector('#select-doctor');
     selectLocation = document.querySelector('#select-location');
 
@@ -29,6 +41,8 @@ function iniDoctorsTab() {
     doctorRegionTampa = document.querySelector('#doctor-region-tampa');
     doctorRegionOrlando = document.querySelector('#doctor-region-orlando');
 
+    doctorThumbnails = document.querySelectorAll('[doctor-thumbnail]');
+
     doctorRegions = [doctorRegionAll, doctorRegionTampa, doctorRegionOrlando];
 
     doctorRegions.forEach(region => {
@@ -45,12 +59,44 @@ function iniLocationsTab() {
     locationRegionTampa = document.querySelector('#location-region-tampa');
     locationRegionOrlando = document.querySelector('#location-region-orlando');
 
+    locationThumbnails = document.querySelectorAll('[location-thumbnail]');
+    locationDetails = document.querySelector('#location-details')
+    locationMaps = document.querySelectorAll('[location-map]');
+    map = document.querySelector('#booking-map-sidebar')
+
+    locationAddress = document.querySelector('#location-address');
+    locationZip = document.querySelector('#location-zip')
+
     locationRegions = [locationRegionAll, locationRegionTampa, locationRegionOrlando];
 
     locationRegions.forEach(region => {
         region.addEventListener('click', (e) => {
             navigateLocationRegion(region.id);
             singleClassChange(locationRegions, region, 'active')
+        })
+    })
+}
+
+function iniDoctorCta() {
+    doctorCtas = document.querySelectorAll('[doctor-cta]');
+
+    doctorCtas.forEach(cta => {
+        cta.addEventListener('click', (e) => {
+            doctorId = cta.attributes['doctor-cta'].value;
+            locationId === null ? navigateTab(locationsTab) : navigateTab(iframeTab)
+            populateSidebar();
+        })
+    })
+}
+
+function iniLocationCta() {
+    locationCtas = document.querySelectorAll('[location-cta]');
+
+    locationCtas.forEach(cta => {
+        cta.addEventListener('click', (e) => {
+            locationId = cta.attributes['location-cta'].value
+            doctorId === null ? navigateTab(doctorsTab) : navigateTab(iframeTab)
+            populateSidebar();
         })
     })
 }
@@ -78,13 +124,57 @@ function iniNavButtons() {
     })
 }
 
+function populateSidebar() {
+    if (doctorId && locationId) {
+        show(sidebarDoctor)
+        show(sidebarLocation)
+        hide(sidebarDoctorPlaceholder)
+        hide(sidebarLocationPlaceholder)
+
+        return;
+    }
+
+    if (doctorId) {
+        sidebarDoctorPlaceholder.querySelector('img').src = getThumbnailsSrc(doctorThumbnails, doctorId, 'doctor');
+        sidebarDoctorPlaceholder.querySelector('.booking-item-title').innerHTML = document.querySelector('[doctor-name="' + doctorId + '"]').innerHTML;
+        show(sidebarDoctorPlaceholder)
+        hide(sidebarLocationPlaceholder)
+        hide(locationDetails)
+        hide(map)
+
+        return;
+    }
+
+    if (locationId) {
+        sidebarLocationPlaceholder.querySelector('img').src = getThumbnailsSrc(locationThumbnails, locationId, 'location');
+        sidebarLocationPlaceholder.querySelector('.booking-item-title').innerHTML = document.querySelector('[location-name="' + locationId + '"]').innerHTML
+        show(sidebarLocationPlaceholder)
+        hide(sidebarDoctorPlaceholder)
+        show(locationDetails)
+        show(map)
+        map.querySelector('img').src = getMapSrc(locationId);
+        locationAddress.innerHTML = document.querySelector('[location-address="' + locationId + '"]').innerHTML;
+        locationZip.innerHTML = document.querySelector('[location-zip="' + locationId + '"]').innerHTML
+
+
+        return;
+    }
+
+    hide(locationDetails)
+    show(sidebarDoctorPlaceholder)
+    show(sidebarLocationPlaceholder)
+}
+
 function navigateTab(newTab) {
     tabs.forEach(tab => hide(tab));
+
     show(newTab);
 
-    if (newTab.id != 'starter-tab') {
+    if (newTab.id !== 'starter-tab') {
+        hide(starterText)
         show(backButton)
     } else {
+        show(starterText)
         hide(backButton)
     }
 }
@@ -133,4 +223,28 @@ function hideParent(div) {
 
 function showParent(div) {
     show(div.parentNode)
+}
+
+function getThumbnailsSrc(thumbnails, value, type) {
+    src = '';
+
+    thumbnails.forEach(thumbnail => {
+        if (thumbnail.attributes[type + '-thumbnail'].value === value) {
+            src = thumbnail.src
+        }
+    })
+
+    return src;
+}
+
+function getMapSrc(value) {
+    src = '';
+
+    locationMaps.forEach(map => {
+        if (map.attributes['location-map'].value === value) {
+            src = map.src
+        }
+    })
+
+    return src;
 }
