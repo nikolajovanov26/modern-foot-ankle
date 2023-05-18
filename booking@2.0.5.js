@@ -1,9 +1,24 @@
+initData();
 iniNavButtons();
 iniStarterTab();
 iniDoctorsTab();
 iniLocationsTab();
 iniDoctorCta();
 iniLocationCta();
+initializeIframe();
+
+function initData() {
+    frame = [];
+    iframes = document.querySelectorAll('.iframe-text');
+    officeIds = document.querySelectorAll('.officeid-text');
+    for (let i = 0; i < officeIds.length; i++) {
+        const obj = {
+            officeID: officeIds[i].innerHTML,
+            iframe: iframes[i].innerHTML
+        };
+        frame.push(obj);
+    }
+}
 
 function iniStarterTab() {
     doctorId = null;
@@ -170,6 +185,10 @@ function navigateTab(newTab) {
 
     show(newTab);
 
+    if (newTab === iframeTab) {
+        getIframe()
+    }
+
     if (locationId) {
         doctorCards.forEach(card => locationId.includes(card.attributes['card-doctor'].value) ? showParent(card) : hideParent(card));
     }
@@ -267,4 +286,39 @@ function getMapSrc(value) {
     })
 
     return src;
+}
+
+function getIframeSrc() {
+    doctorId
+    locationId
+}
+function initializeIframe() {
+    const iframe = document.querySelector('.booking-iframe iframe');
+
+    iframe.addEventListener('load', function() {
+        const bookingLoader = document.querySelector('.booking--loader');
+        if (bookingLoader) {
+            bookingLoader.style.display = 'none';
+        }
+    });
+}
+
+function getIframe() {
+    offices = locationId.split(' ')
+
+    offices.forEach(office => {
+        let docId = office.split(':')[0]
+        let locId = office.split(':')[1]
+        if (docId === doctorId) {
+            console.log(1)
+            console.log(frame)
+            frame.forEach(f => {
+                if (f.officeID === locId) {
+                    frameID = f.iframe
+                    url = 'https://drchrono.com/scheduling/offices/' + frameID
+                    document.querySelector('.booking-iframe iframe').src = url
+                }
+            })
+        }
+    })
 }
