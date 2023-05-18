@@ -6,6 +6,7 @@ iniLocationsTab();
 iniDoctorCta();
 iniLocationCta();
 initializeIframe();
+iniRadioButtons();
 
 function initData() {
     frame = [];
@@ -39,14 +40,21 @@ function iniStarterTab() {
     locationsTab = document.querySelector('#all-locations-tab');
     iframeTab = document.querySelector('#iframe-tab')
 
+    sidebarLocationTitle = document.querySelector('#sidebar-location-title')
+    sidebarDoctorTitle = document.querySelector('#sidebar-doctor-title')
+
+    doctorHours = document.querySelector('#doctor-working-hours')
+
     tabs = [starterTab,doctorsTab,locationsTab,iframeTab];
 
     selectDoctor.addEventListener("click", (e) => {
         navigateTab(doctorsTab);
+        navigateDoctorRegion('doctor-region-all')
     });
 
     selectLocation.addEventListener("click", (e) => {
         navigateTab(locationsTab);
+        navigateLocationRegion('location-region-all')
     });
 }
 
@@ -128,12 +136,40 @@ function iniNavButtons() {
                 location.href = '/'
                 break;
             case 'all-doctors-tab':
-                navigateTab(starterTab)
+                if (locationId) {
+                    locationId = null
+                    navigateTab(locationsTab)
+                    populateSidebar()
+                    navigateLocationRegion('location-region-all')
+                } else {
+                    navigateTab(starterTab)
+                }
+
                 break;
             case 'all-locations-tab':
-                navigateTab(starterTab)
+                if (doctorId) {
+                    doctorId = null
+                    navigateTab(doctorsTab)
+                    navigateDoctorRegion('doctor-region-all')
+                    populateSidebar()
+                } else {
+                    navigateTab(starterTab)
+                }
+
                 break;
-            case 'starter-tabiframe-tab':
+            case 'iframe-tab':
+                if (prev === 'all-doctors-tab') {
+                    doctorId = null
+                    navigateTab(doctorsTab)
+                    navigateDoctorRegion('doctor-region-all')
+                    populateSidebar()
+                } else {
+                    locationId = null
+                    navigateTab(locationsTab)
+                    populateSidebar()
+                    navigateLocationRegion('location-region-all')
+                }
+
                 break;
         }
     })
@@ -141,13 +177,39 @@ function iniNavButtons() {
 
 function populateSidebar() {
     if (doctorId && locationId) {
+        sidebarDoctorPlaceholder.querySelector('img').src = getThumbnailsSrc(doctorThumbnails, doctorId, 'doctor');
+        sidebarDoctorPlaceholder.querySelector('.booking-item-title').innerHTML = document.querySelector('[doctor-name="' + doctorId + '"]').innerHTML;
+        sidebarDoctorTitle.innerHTML = 'Locations for ' + document.querySelector('[doctor-name="' + doctorId + '"]').innerHTML;
+        sidebarLocationPlaceholder.querySelector('img').src = getThumbnailsSrc(locationThumbnails, locationId, 'location');
+        sidebarLocationPlaceholder.querySelector('.booking-item-title').innerHTML = document.querySelector('[location-name="' + locationId + '"]').innerHTML
+        sidebarLocationTitle.innerHTML = 'Doctors at ' + document.querySelector('[location-name="' + locationId + '"]').innerHTML
+        locationAddress.innerHTML = document.querySelector('[location-address="' + locationId + '"]').innerHTML;
+        locationZip.innerHTML = document.querySelector('[location-zip="' + locationId + '"]').innerHTML
+        show(locationDetails)
+        show(map)
+        map.querySelector('img').src = getMapSrc(locationId);
+
         show(sidebarDoctor)
         show(sidebarLocation)
-        hide(sidebarDoctorPlaceholder)
-        hide(sidebarLocationPlaceholder)
+        show(sidebarDoctorPlaceholder)
+        show(sidebarLocationPlaceholder)
+
+        document.querySelector('[radio-location="' + locationId + '"]').querySelector('.booking-radio-button').classList.add('checked')
+        document.querySelector('[radio-doctor="' + doctorId + '"]').querySelector('.booking-radio-button').classList.add('checked')
+
+        show(doctorHours)
+        document.querySelectorAll('[location-hours]').forEach(element => {
+            if (element.attributes['location-hours'].value === locationId && element.attributes['doctor-hours'].value === doctorId) {
+                doctorHours.innerHTML = element.innerHTML
+            }
+        })
 
         return;
     }
+
+    hide(doctorHours)
+    hide(sidebarDoctor)
+    hide(sidebarLocation)
 
     if (doctorId) {
         sidebarDoctorPlaceholder.querySelector('img').src = getThumbnailsSrc(doctorThumbnails, doctorId, 'doctor');
@@ -175,17 +237,27 @@ function populateSidebar() {
         return;
     }
 
-    hide(locationDetails)
-    show(sidebarDoctorPlaceholder)
+    sidebarLocationPlaceholder.querySelector('img').src = 'https://uploads-ssl.webflow.com/640801637e0e2c44c99a32f0/6463e481967df28518616d6c_person_outline_24px.svg';
+    sidebarLocationPlaceholder.querySelector('.booking-item-title').innerHTML = 'Select Location'
+    sidebarDoctorPlaceholder.querySelector('img').src = 'https://uploads-ssl.webflow.com/640801637e0e2c44c99a32f0/6463e481967df28518616d6c_person_outline_24px.svg';
+    sidebarDoctorPlaceholder.querySelector('.booking-item-title').innerHTML = 'Select Doctor'
+
     show(sidebarLocationPlaceholder)
+    show(sidebarDoctorPlaceholder)
+    hide(map)
+    hide(doctorHours)
+    hide(locationDetails)
 }
 
 function navigateTab(newTab) {
+    prev = findActiveTab()
+
     tabs.forEach(tab => hide(tab));
 
     show(newTab);
 
     if (newTab === iframeTab) {
+        populateSidebar()
         getIframe()
     }
 
@@ -215,7 +287,7 @@ function navigateDoctorRegion(newRegion) {
 
     if (locationId) {
         doctorCards.forEach(card => {
-            if (!locationId.includes(card.attributes['card-doctor'].value))  hideParent(card)
+            if (!locationId.includes(card.attributes['card-doctor'].value)) hideParent(card)
         });
     }
 }
@@ -229,7 +301,7 @@ function navigateLocationRegion(newRegion) {
 
     if (doctorId) {
         locationCards.forEach(card => {
-            if (card.attributes['card-location'].value.includes(doctorId))  hideParent(card)
+            if (!card.attributes['card-location'].value.includes(doctorId)) hideParent(card)
         });
     }
 }
@@ -288,10 +360,6 @@ function getMapSrc(value) {
     return src;
 }
 
-function getIframeSrc() {
-    doctorId
-    locationId
-}
 function initializeIframe() {
     const iframe = document.querySelector('.booking-iframe iframe');
 
@@ -304,14 +372,14 @@ function initializeIframe() {
 }
 
 function getIframe() {
+    sidebarRadioData()
+
     offices = locationId.split(' ')
 
     offices.forEach(office => {
         let docId = office.split(':')[0]
         let locId = office.split(':')[1]
         if (docId === doctorId) {
-            console.log(1)
-            console.log(frame)
             frame.forEach(f => {
                 if (f.officeID === locId) {
                     frameID = f.iframe
@@ -321,4 +389,34 @@ function getIframe() {
             })
         }
     })
+}
+
+function iniRadioButtons() {
+    radioLocation = document.querySelectorAll('[radio-location]')
+    radioDoctor = document.querySelectorAll('[radio-doctor]')
+
+    radioLocation.forEach(button => {
+        button.addEventListener('click', (e) => changeRadioButton(button, radioLocation, 'radio-location'))
+    })
+    radioDoctor.forEach(button => {
+        button.addEventListener('click', (e) => changeRadioButton(button, radioDoctor, 'radio-doctor'))
+
+    })
+}
+
+function changeRadioButton(button, buttons, attribute) {
+    buttons.forEach(btn => btn.querySelector('.booking-radio-button').classList.remove('checked'))
+
+    button.querySelector('.booking-radio-button').classList.add('checked')
+
+    if (attribute === 'radio-location') locationId = button.attributes[attribute].value
+    if (attribute === 'radio-doctor') doctorId = button.attributes[attribute].value
+
+    populateSidebar()
+    getIframe()
+}
+
+function sidebarRadioData() {
+    radioLocation.forEach(radio => radio.attributes['radio-location'].value.includes(doctorId) ? radio.style.display = 'flex' : hide(radio));
+    radioDoctor.forEach(radio => locationId.includes(radio.attributes['radio-doctor'].value) ? radio.style.display = 'flex' : hide(radio));
 }
