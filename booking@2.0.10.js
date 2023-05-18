@@ -5,9 +5,9 @@ iniDoctorsTab();
 iniLocationsTab();
 iniDoctorCta();
 iniLocationCta();
-checkIncomingData()
 initializeIframe();
 iniRadioButtons();
+checkIncomingData()
 
 
 function initData() {
