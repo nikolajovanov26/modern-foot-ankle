@@ -1,11 +1,11 @@
 initData();
 iniNavButtons();
-checkIncomingData()
 iniStarterTab();
 iniDoctorsTab();
 iniLocationsTab();
 iniDoctorCta();
 iniLocationCta();
+checkIncomingData()
 initializeIframe();
 iniRadioButtons();
 
