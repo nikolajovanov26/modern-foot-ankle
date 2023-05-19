@@ -186,10 +186,10 @@ function populateSidebar() {
     if (doctorId && locationId) {
         sidebarDoctorPlaceholder.querySelector('img').src = getThumbnailsSrc(doctorThumbnails, doctorId, 'doctor');
         sidebarDoctorPlaceholder.querySelector('.booking-item-title').innerHTML = document.querySelector('[doctor-name="' + doctorId + '"]').innerHTML;
-        sidebarDoctorTitle.innerHTML = 'Doctors for ' + document.querySelector('[doctor-name="' + doctorId + '"]').innerHTML;
+        sidebarLocationTitle.innerHTML = 'Locations for ' + document.querySelector('[doctor-name="' + doctorId + '"]').innerHTML;
         sidebarLocationPlaceholder.querySelector('img').src = getThumbnailsSrc(locationThumbnails, locationId, 'location');
         sidebarLocationPlaceholder.querySelector('.booking-item-title').innerHTML = document.querySelector('[location-name="' + locationId + '"]').innerHTML
-        sidebarLocationTitle.innerHTML = 'Locations at ' + document.querySelector('[location-name="' + locationId + '"]').innerHTML
+        sidebarDoctorTitle.innerHTML = 'Doctors at ' + document.querySelector('[location-name="' + locationId + '"]').innerHTML
         locationAddress.innerHTML = document.querySelector('[location-address="' + locationId + '"]').innerHTML;
         locationZip.innerHTML = document.querySelector('[location-zip="' + locationId + '"]').innerHTML
         show(locationDetails)
