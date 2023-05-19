@@ -33,21 +33,7 @@ function iniStarterTab() {
     sidebarDoctorPlaceholder = document.querySelector('#sidebar-doctor-placeholder');
     sidebarLocationPlaceholder = document.querySelector('#sidebar-location-placeholder');
 
-    sidebarDoctorPlaceholder.addEventListener('click', (e) => {
-        if (doctorId === null && locationId === null) {
-            navigateTab(doctorsTab)
-            sidebarDoctorPlaceholder.classList.add('active')
-            sidebarLocationPlaceholder.classList.remove('active')
-        }
-    })
-
-    sidebarLocationPlaceholder.addEventListener('click', (e) => {
-        if (doctorId === null && locationId === null) {
-            navigateTab(locationsTab)
-            sidebarLocationPlaceholder.classList.add('active')
-            sidebarDoctorPlaceholder.classList.remove('active')
-        }
-    })
+    starterSidebarTabs()
 
     starterText = document.querySelector('.booking-starter-p');
     selectDoctor = document.querySelector('#select-doctor');
@@ -273,6 +259,8 @@ function populateSidebar() {
 }
 
 function navigateTab(newTab) {
+    starterSidebarTabs()
+
     prev = findActiveTab()
 
     tabs.forEach(tab => hide(tab));
@@ -472,4 +460,22 @@ function checkIncomingData() {
 
         return;
     }
+}
+
+function starterSidebarTabs() {
+    sidebarDoctorPlaceholder.addEventListener('click', (e) => {
+        if (doctorId === null && locationId === null) {
+            navigateTab(doctorsTab)
+            sidebarDoctorPlaceholder.classList.add('active')
+            sidebarLocationPlaceholder.classList.remove('active')
+        }
+    })
+
+    sidebarLocationPlaceholder.addEventListener('click', (e) => {
+        if (doctorId === null && locationId === null) {
+            navigateTab(locationsTab)
+            sidebarLocationPlaceholder.classList.add('active')
+            sidebarDoctorPlaceholder.classList.remove('active')
+        }
+    })
 }
