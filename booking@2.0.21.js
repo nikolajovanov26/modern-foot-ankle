@@ -191,17 +191,22 @@ function iniNavButtons() {
                     break;
                 }
 
+                console.log(doctorId)
+                console.log(locationId)
+
                 if (prev === 'all-doctors-tab') {
                     doctorId = null
                     navigateTab(doctorsTab)
-                    navigateDoctorRegion('doctor-region-all')
                     populateSidebar()
+                    navigateDoctorRegion('doctor-region-all')
                 }
 
-                locationId = null
-                navigateTab(locationsTab)
-                populateSidebar()
-                navigateLocationRegion('location-region-all')
+                if (prev === 'all-locations-tab') {
+                    locationId = null
+                    navigateTab(locationsTab)
+                    populateSidebar()
+                    navigateLocationRegion('location-region-all')
+                }
 
                 break;
         }
@@ -209,8 +214,6 @@ function iniNavButtons() {
 }
 
 function populateSidebar() {
-    starterSidebarTabs()
-
     if (doctorId && locationId) {
         sidebarDoctorPlaceholder.querySelector('img').src = getThumbnailsSrc(doctorThumbnails, doctorId, 'doctor');
         sidebarDoctorPlaceholder.querySelector('.booking-item-title').innerHTML = document.querySelector('[doctor-name="' + doctorId + '"]').innerHTML;
