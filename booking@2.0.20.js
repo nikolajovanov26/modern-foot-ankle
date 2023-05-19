@@ -163,6 +163,8 @@ function iniNavButtons() {
                     navigateTab(locationsTab)
                     populateSidebar()
                     navigateLocationRegion('location-region-all')
+                    sidebarLocationPlaceholder.classList.add('active')
+                    sidebarDoctorPlaceholder.classList.remove('active')
                 } else {
                     navigateTab(starterTab)
                 }
@@ -174,7 +176,11 @@ function iniNavButtons() {
                     navigateTab(doctorsTab)
                     navigateDoctorRegion('doctor-region-all')
                     populateSidebar()
+                    sidebarLocationPlaceholder.classList.remove('active')
+                    sidebarDoctorPlaceholder.classList.add('active')
                 } else {
+                    sidebarLocationPlaceholder.classList.remove('active')
+                    sidebarDoctorPlaceholder.classList.remove('active')
                     navigateTab(starterTab)
                 }
 
