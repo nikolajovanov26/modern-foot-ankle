@@ -478,7 +478,13 @@ function checkIncomingData() {
 
 function starterSidebarTabs() {
     if (doctorId === null && locationId === null) {
-        return
+        if (findActiveTab() === locationsTab) {
+            sidebarLocationPlaceholder.classList.add('active')
+            sidebarDoctorPlaceholder.classList.remove('active')
+        } else {
+            sidebarLocationPlaceholder.classList.remove('active')
+            sidebarDoctorPlaceholder.classList.add('active')
+        }
     }
 
     sidebarLocationPlaceholder.classList.remove('active')
