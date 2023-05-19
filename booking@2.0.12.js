@@ -33,6 +33,22 @@ function iniStarterTab() {
     sidebarDoctorPlaceholder = document.querySelector('#sidebar-doctor-placeholder');
     sidebarLocationPlaceholder = document.querySelector('#sidebar-location-placeholder');
 
+    sidebarDoctorPlaceholder.addEventListener('click', (e) => {
+        if (doctorId === null && locationId === null) {
+            navigateTab(doctorsTab)
+            sidebarDoctorPlaceholder.classList.add('active')
+            sidebarLocationPlaceholder.classList.remove('active')
+        }
+    })
+
+    sidebarLocationPlaceholder.addEventListener('click', (e) => {
+        if (doctorId === null && locationId === null) {
+            navigateTab(locationsTab)
+            sidebarLocationPlaceholder.classList.add('active')
+            sidebarDoctorPlaceholder.classList.remove('active')
+        }
+    })
+
     starterText = document.querySelector('.booking-starter-p');
     selectDoctor = document.querySelector('#select-doctor');
     selectLocation = document.querySelector('#select-location');
