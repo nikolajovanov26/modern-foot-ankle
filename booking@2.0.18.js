@@ -67,11 +67,15 @@ function iniStarterTab() {
 
     selectDoctor.addEventListener("click", (e) => {
         navigateTab(doctorsTab);
+        sidebarLocationPlaceholder.classList.remove('active')
+        sidebarDoctorPlaceholder.classList.add('active')
         navigateDoctorRegion('doctor-region-all')
     });
 
     selectLocation.addEventListener("click", (e) => {
         navigateTab(locationsTab);
+        sidebarLocationPlaceholder.classList.add('active')
+        sidebarDoctorPlaceholder.classList.remove('active')
         navigateLocationRegion('location-region-all')
     });
 }
@@ -478,10 +482,12 @@ function checkIncomingData() {
 
 function starterSidebarTabs() {
     if (doctorId === null && locationId === null) {
-        if (findActiveTab() === locationsTab) {
+        if (findActiveTab() === locationsTab.id) {
             sidebarLocationPlaceholder.classList.add('active')
             sidebarDoctorPlaceholder.classList.remove('active')
-        } else {
+        }
+
+        if (findActiveTab() === doctorsTab.id) {
             sidebarLocationPlaceholder.classList.remove('active')
             sidebarDoctorPlaceholder.classList.add('active')
         }
