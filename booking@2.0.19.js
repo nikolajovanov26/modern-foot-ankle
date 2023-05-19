@@ -203,6 +203,8 @@ function iniNavButtons() {
 }
 
 function populateSidebar() {
+    starterSidebarTabs()
+
     if (doctorId && locationId) {
         sidebarDoctorPlaceholder.querySelector('img').src = getThumbnailsSrc(doctorThumbnails, doctorId, 'doctor');
         sidebarDoctorPlaceholder.querySelector('.booking-item-title').innerHTML = document.querySelector('[doctor-name="' + doctorId + '"]').innerHTML;
