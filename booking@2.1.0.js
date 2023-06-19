@@ -35,6 +35,10 @@ function iniStarterTab() {
     sidebarDoctorPlaceholder.addEventListener('click', (e) => {
         if (doctorId === null && locationId === null) {
             navigateTab(doctorsTab)
+            doctorCards.forEach(card => showParent(card))
+            locationCards.forEach(card => showParent(card))
+
+            console.log(doctorCards)
             sidebarDoctorPlaceholder.classList.add('active')
             sidebarLocationPlaceholder.classList.remove('active')
         }
@@ -43,6 +47,8 @@ function iniStarterTab() {
     sidebarLocationPlaceholder.addEventListener('click', (e) => {
         if (doctorId === null && locationId === null) {
             navigateTab(locationsTab)
+            doctorCards.forEach(card => showParent(card))
+            locationCards.forEach(card => showParent(card))
             sidebarLocationPlaceholder.classList.add('active')
             sidebarDoctorPlaceholder.classList.remove('active')
         }
