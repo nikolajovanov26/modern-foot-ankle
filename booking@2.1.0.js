@@ -9,7 +9,6 @@ initializeIframe();
 iniRadioButtons();
 checkIncomingData()
 
-
 function initData() {
     frame = [];
     iframes = document.querySelectorAll('.iframe-text');
@@ -85,11 +84,8 @@ function iniDoctorsTab() {
     doctorRegionAll = document.querySelector('#doctor-region-all');
     doctorRegionTampa = document.querySelector('#doctor-region-tampa');
     doctorRegionOrlando = document.querySelector('#doctor-region-orlando');
-
     doctorThumbnails = document.querySelectorAll('[doctor-thumbnail]');
-
     doctorRegions = [doctorRegionAll, doctorRegionTampa, doctorRegionOrlando];
-
     doctorRegions.forEach(region => {
         region.addEventListener('click', (e) => {
             navigateDoctorRegion(region.id);
@@ -103,12 +99,10 @@ function iniLocationsTab() {
     locationRegionAll = document.querySelector('#location-region-all');
     locationRegionTampa = document.querySelector('#location-region-tampa');
     locationRegionOrlando = document.querySelector('#location-region-orlando');
-
     locationThumbnails = document.querySelectorAll('[location-thumbnail]');
     locationDetails = document.querySelector('#location-details')
     locationMaps = document.querySelectorAll('[location-map]');
     map = document.querySelector('#booking-map-sidebar')
-
     locationAddress = document.querySelector('#location-address');
     locationZip = document.querySelector('#location-zip')
 
@@ -124,7 +118,6 @@ function iniLocationsTab() {
 
 function iniDoctorCta() {
     doctorCtas = document.querySelectorAll('[doctor-cta]');
-
     doctorCtas.forEach(cta => {
         cta.addEventListener('click', (e) => {
             doctorId = cta.attributes['doctor-cta'].value;
@@ -136,7 +129,6 @@ function iniDoctorCta() {
 
 function iniLocationCta() {
     locationCtas = document.querySelectorAll('[location-cta]');
-
     locationCtas.forEach(cta => {
         cta.addEventListener('click', (e) => {
             locationId = cta.attributes['location-cta'].value
@@ -149,9 +141,7 @@ function iniLocationCta() {
 function iniNavButtons() {
     closeButton = document.querySelector('#close-button');
     backButton = document.querySelector('#back-button');
-
     closeButton.addEventListener('click', (e) => location.href = '/');
-    
     backButton.addEventListener('click', (e) => {
         switch (findActiveTab()) {
             case 'starter-tab':
@@ -168,7 +158,6 @@ function iniNavButtons() {
                 } else {
                     navigateTab(starterTab)
                 }
-
                 break;
             case 'all-locations-tab':
                 if (doctorId) {
@@ -183,7 +172,6 @@ function iniNavButtons() {
                     sidebarDoctorPlaceholder.classList.remove('active')
                     navigateTab(starterTab)
                 }
-
                 break;
             case 'iframe-tab':
                 if (prev === 'ref') {
@@ -207,16 +195,20 @@ function iniNavButtons() {
                     populateSidebar()
                     navigateLocationRegion('location-region-all')
                 }
-
                 break;
         }
     })
 }
 
 function populateSidebar() {
+
+    radioLocation.forEach(button => button.querySelector('.booking-radio-button').classList.remove('checked'));
+    radioDoctor.forEach(button => button.querySelector('.booking-radio-button').classList.remove('checked'));
+
     if (doctorId && locationId) {
         sidebarDoctorPlaceholder.querySelector('img').src = getThumbnailsSrc(doctorThumbnails, doctorId, 'doctor');
         sidebarDoctorPlaceholder.querySelector('.booking-item-title').innerHTML = document.querySelector('[doctor-name="' + doctorId + '"]').innerHTML;
+        sidebarDoctorPlaceholder.querySelector('.booking-item-subtitle').innerHTML = document.querySelector('[location-name="' + locationId + '"]').innerHTML
         sidebarLocationTitle.innerHTML = 'Locations for ' + document.querySelector('[doctor-name="' + doctorId + '"]').innerHTML;
         sidebarLocationPlaceholder.querySelector('img').src = getThumbnailsSrc(locationThumbnails, locationId, 'location');
         sidebarLocationPlaceholder.querySelector('.booking-item-title').innerHTML = document.querySelector('[location-name="' + locationId + '"]').innerHTML
@@ -226,7 +218,6 @@ function populateSidebar() {
         show(locationDetails)
         show(map)
         map.querySelector('img').src = getMapSrc(locationId);
-
         show(sidebarDoctor)
         show(sidebarLocation)
         show(sidebarDoctorPlaceholder)
@@ -275,9 +266,9 @@ function populateSidebar() {
         return;
     }
 
-    sidebarLocationPlaceholder.querySelector('img').src = 'https://uploads-ssl.webflow.com/640801637e0e2c44c99a32f0/6463e481967df28518616d6c_person_outline_24px.svg';
+    sidebarLocationPlaceholder.querySelector('img').src = 'https://uploads-ssl.webflow.com/640801637e0e2c44c99a32f0/646a284464dc0b5ec35aa7ab_museum.svg';
     sidebarLocationPlaceholder.querySelector('.booking-item-title').innerHTML = 'Select Location'
-    sidebarDoctorPlaceholder.querySelector('img').src = 'https://uploads-ssl.webflow.com/640801637e0e2c44c99a32f0/6463e481967df28518616d6c_person_outline_24px.svg';
+    sidebarDoctorPlaceholder.querySelector('img').src = 'https://uploads-ssl.webflow.com/640801637e0e2c44c99a32f0/646a28190847ecf19cb661ac_supervised_user_circle.svg';
     sidebarDoctorPlaceholder.querySelector('.booking-item-title').innerHTML = 'Select Doctor'
 
     show(sidebarLocationPlaceholder)
