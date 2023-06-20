@@ -145,6 +145,8 @@ function iniLocationCta() {
 }
 
 function iniNavButtons() {
+    mainNav = document.querySelectorAll('.card-filter-wrap');
+
     closeButton = document.querySelector('#close-button');
     backButton = document.querySelector('#back-button');
     closeButton.addEventListener('click', (e) => location.href = '/');
@@ -292,6 +294,15 @@ function navigateTab(newTab) {
     tabs.forEach(tab => hide(tab));
 
     show(newTab);
+
+    console.log(1)
+    if (doctorId || locationId) {
+
+        mainNav.forEach(nav => nav.style.display = 'none')
+    } else {
+        console.log(3)
+        mainNav.forEach(nav => nav.style.display = 'flex')
+    }
 
     if (newTab === iframeTab) {
         populateSidebar()
