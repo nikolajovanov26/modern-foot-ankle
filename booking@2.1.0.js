@@ -5,6 +5,7 @@ iniDoctorsTab();
 iniLocationsTab();
 iniDoctorCta();
 iniLocationCta();
+iniDoctorHours();
 initializeIframe();
 iniRadioButtons();
 checkIncomingData()
@@ -68,7 +69,7 @@ function iniStarterTab() {
 
     doctorHours = document.querySelector('#doctor-working-hours')
 
-    tabs = [starterTab,doctorsTab,locationsTab,iframeTab];
+    tabs = [starterTab, doctorsTab, locationsTab, iframeTab];
 
     selectDoctor.addEventListener("click", (e) => {
         navigateTab(doctorsTab);
@@ -140,6 +141,36 @@ function iniLocationCta() {
             locationId = cta.attributes['location-cta'].value
             doctorId === null ? navigateTab(doctorsTab) : navigateTab(iframeTab)
             populateSidebar();
+        })
+    })
+}
+
+function iniDoctorHours() {
+    hourTabs = document.querySelectorAll('.tab-flex-wrap');
+    hourTabs.forEach(tab => tab.childNodes.forEach((tab, index) => {
+        if (index > 0) {
+            tab.classList.remove('active')
+        }
+    }))
+
+    doctorCards.forEach(card => {
+        card.querySelectorAll('[doctor-hours-tab]').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                card.querySelectorAll('[doctor-hours-card]').forEach(hours => {
+                    if (hours.attributes['doctor-hours-card'].value === tab.innerHTML) {
+                        show(hours)
+                    } else {
+                        hide(hours)
+                    }
+                })
+                card.querySelectorAll('[doctor-hours-tab]').forEach(docTab => {
+                    if (docTab.attributes['doctor-hours-tab'].value === tab.attributes['doctor-hours-tab'].value) {
+                        docTab.parentElement.classList.add('active')
+                    } else {
+                        docTab.parentElement.classList.remove('active')
+                    }
+                })
+            })
         })
     })
 }
@@ -308,7 +339,7 @@ function navigateTab(newTab) {
         doctorCards.forEach(card => locationId.includes(card.attributes['card-doctor'].value) ? showParent(card) : hideParent(card));
     }
 
-    if (doctorId)  {
+    if (doctorId) {
         locationCards.forEach(card => card.attributes['card-location'].value.includes(doctorId) ? showParent(card) : hideParent(card));
     }
 
@@ -368,6 +399,8 @@ function findActiveTab() {
 }
 
 function singleClassChange(divs, target, cssClass) {
+    console.log(divs)
+    console.log(target)
     divs.forEach(div => div === target ? div.classList.add(cssClass) : div.classList.remove(cssClass))
 }
 
@@ -406,7 +439,7 @@ function getMapSrc(value) {
 function initializeIframe() {
     const iframe = document.querySelector('.booking-iframe iframe');
 
-    iframe.addEventListener('load', function() {
+    iframe.addEventListener('load', function () {
         const bookingLoader = document.querySelector('.booking--loader');
         if (bookingLoader) {
             bookingLoader.style.display = 'none';
