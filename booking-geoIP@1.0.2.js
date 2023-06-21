@@ -1,12 +1,38 @@
-fetch('https://api.ipify.org?format=json')
-    .then(response => response.json())
-    .then(data => {
-        ipAddress = data.ip;
+function getUserIPAddress() {
+    return new Promise(function(resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://api.ipify.org?format=json', true);
+
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                try {
+                    var response = JSON.parse(xhr.responseText);
+                    resolve(response.ip);
+                } catch (error) {
+                    reject(error);
+                }
+            } else {
+                reject(new Error('Failed to fetch IP address'));
+            }
+        };
+
+        xhr.onerror = function() {
+            reject(new Error('Failed to make the request'));
+        };
+
+        xhr.send();
+    });
+}
+
+// Usage
+getUserIPAddress()
+    .then(function(ipAddress) {
         getGeoLocation(ipAddress);
     })
-    .catch(error => {
-        console.error('Error:', error);
+    .catch(function(error) {
+        console.error(error);
     });
+
 
 function getGeoLocation(ipAddress) {
     const accessKey = '5be6d10e55523101a347f33d8cc1fee7';
