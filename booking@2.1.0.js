@@ -35,23 +35,21 @@ function iniStarterTab() {
 
     sidebarDoctorPlaceholder.addEventListener('click', (e) => {
         if (doctorId === null && locationId === null) {
-            navigateTab(doctorsTab)
             doctorCards.forEach(card => showParent(card))
             locationCards.forEach(card => showParent(card))
-
-            console.log(doctorCards)
             sidebarDoctorPlaceholder.classList.add('active')
             sidebarLocationPlaceholder.classList.remove('active')
+            navigateTab(doctorsTab)
         }
     })
 
     sidebarLocationPlaceholder.addEventListener('click', (e) => {
         if (doctorId === null && locationId === null) {
-            navigateTab(locationsTab)
             doctorCards.forEach(card => showParent(card))
             locationCards.forEach(card => showParent(card))
             sidebarLocationPlaceholder.classList.add('active')
             sidebarDoctorPlaceholder.classList.remove('active')
+            navigateTab(locationsTab)
         }
     })
 
@@ -72,17 +70,17 @@ function iniStarterTab() {
     tabs = [starterTab, doctorsTab, locationsTab, iframeTab];
 
     selectDoctor.addEventListener("click", (e) => {
-        navigateTab(doctorsTab);
         sidebarLocationPlaceholder.classList.remove('active')
         sidebarDoctorPlaceholder.classList.add('active')
         navigateDoctorRegion('all')
+        navigateTab(doctorsTab);
     });
 
     selectLocation.addEventListener("click", (e) => {
-        navigateTab(locationsTab);
         sidebarLocationPlaceholder.classList.add('active')
         sidebarDoctorPlaceholder.classList.remove('active')
         navigateLocationRegion('all')
+        navigateTab(locationsTab);
     });
 }
 
@@ -139,6 +137,25 @@ function iniLocationCta() {
     locationCtas.forEach(cta => {
         cta.addEventListener('click', (e) => {
             locationId = cta.attributes['location-cta'].value
+
+            doctorCards.forEach(card => {
+                card.querySelectorAll('[doctor-hours-tab]').forEach(tab => {
+                    if (tab.attributes['doctor-hours-id'].value.includes(locationId)) {
+                        tab.parentElement.classList.add('active')
+                    } else {
+                        tab.parentElement.classList.remove('active')
+                    }
+                })
+
+                card.querySelectorAll('[location-hours]').forEach(hours => {
+                    if (hours.attributes['location-hours'].value.includes(locationId)) {
+                        show(hours)
+                    } else {
+                        hide(hours)
+                    }
+                })
+            })
+
             doctorId === null ? navigateTab(doctorsTab) : navigateTab(iframeTab)
             populateSidebar();
         })
@@ -146,12 +163,7 @@ function iniLocationCta() {
 }
 
 function iniDoctorHours() {
-    hourTabs = document.querySelectorAll('.tab-flex-wrap');
-    hourTabs.forEach(tab => tab.childNodes.forEach((tab, index) => {
-        if (index > 0) {
-            tab.classList.remove('active')
-        }
-    }))
+    resetDoctorHours()
 
     doctorCards.forEach(card => {
         card.querySelectorAll('[doctor-hours-tab]').forEach(tab => {
@@ -189,11 +201,11 @@ function iniNavButtons() {
             case 'all-doctors-tab':
                 if (locationId) {
                     locationId = null
-                    navigateTab(locationsTab)
                     populateSidebar()
                     navigateLocationRegion('all')
                     sidebarLocationPlaceholder.classList.add('active')
                     sidebarDoctorPlaceholder.classList.remove('active')
+                    navigateTab(locationsTab)
                 } else {
                     navigateTab(starterTab)
                 }
@@ -201,11 +213,11 @@ function iniNavButtons() {
             case 'all-locations-tab':
                 if (doctorId) {
                     doctorId = null
-                    navigateTab(doctorsTab)
                     navigateDoctorRegion('all')
                     populateSidebar()
                     sidebarLocationPlaceholder.classList.remove('active')
                     sidebarDoctorPlaceholder.classList.add('active')
+                    navigateTab(doctorsTab)
                 } else {
                     sidebarLocationPlaceholder.classList.remove('active')
                     sidebarDoctorPlaceholder.classList.remove('active')
@@ -233,6 +245,7 @@ function iniNavButtons() {
                 }
                 break;
         }
+        resetDoctorHours()
     })
 }
 
@@ -316,6 +329,7 @@ function populateSidebar() {
 
 function navigateTab(newTab) {
     starterSidebarTabs()
+    window.scrollTo({top: 0, behavior: 'smooth'})
 
     prev = findActiveTab()
 
@@ -324,7 +338,6 @@ function navigateTab(newTab) {
     show(newTab);
 
     if (doctorId || locationId) {
-
         mainNav.forEach(nav => nav.style.display = 'none')
     } else {
         mainNav.forEach(nav => nav.style.display = 'flex')
@@ -542,4 +555,25 @@ function starterSidebarTabs() {
 
     sidebarLocationPlaceholder.classList.remove('active')
     sidebarDoctorPlaceholder.classList.remove('active')
+}
+
+function resetDoctorHours() {
+    hourTabs = document.querySelectorAll('.tab-flex-wrap');
+    hourTabs.forEach(tab => tab.childNodes.forEach((tab, index) => {
+        if (index > 0) {
+            tab.classList.remove('active')
+        } else {
+            tab.classList.add('active')
+        }
+    }))
+
+    doctorCards.forEach(card => {
+        card.querySelectorAll('[doctor-hours-card]').forEach((hours,index) => {
+            if (index === 0) {
+                show(hours)
+            } else {
+                hide(hours)
+            }
+        })
+    })
 }
