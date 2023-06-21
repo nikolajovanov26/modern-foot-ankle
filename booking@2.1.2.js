@@ -1,3 +1,5 @@
+
+getIP();
 initData();
 iniNavButtons();
 iniStarterTab();
@@ -412,8 +414,6 @@ function findActiveTab() {
 }
 
 function singleClassChange(divs, target, cssClass) {
-    console.log(divs)
-    console.log(target)
     divs.forEach(div => div === target ? div.classList.add(cssClass) : div.classList.remove(cssClass))
 }
 
@@ -577,4 +577,74 @@ function resetDoctorHours() {
             }
         })
     })
+}
+
+async function getIP(){
+    fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.ip);
+            ipAddress = data.ip;
+            getGeoLocation(ipAddress);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+    // ipAddress = '89.205.101.49'
+    // getGeoLocation(ipAddress);
+}
+
+function getGeoLocation(ipAddress) {
+    const accessKey = '5be6d10e55523101a347f33d8cc1fee7';
+    fetch('http://api.ipstack.com/' + ipAddress + '?access_key=' + accessKey)
+        .then(response => response.json())
+        .then(data => {
+            const { latitude, longitude } = data;
+            arrangeCards(latitude,longitude);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+function arrangeCards(latitude,longitude) {
+    distances = []
+
+    cards = document.querySelectorAll('[location-longitude]')
+    cards.forEach(card => {
+        distance = calculateDistance(latitude, longitude, card.attributes['location-latitude'].value, card.attributes['location-longitude'].value);
+        distances.push([distance, card]);
+    })
+
+    var sortedArray = distances.sort(function(a, b) { return a[0] - b[0]; });
+
+    divs = [];
+    sortedArray.forEach(sorted => divs.push(sorted[1]))
+
+    const container = document.getElementById('location-list');
+
+    divs.forEach(div => {
+        container.appendChild(div); // Append each div back to the container in the new order
+    });
+}
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const earthRadius = 6371; // Radius of the Earth in kilometers
+    const dLat = toRadians(lat2 - lat1);
+    const dLon = toRadians(lon2 - lon1);
+
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = earthRadius * c;
+
+    return distance;
+}
+
+function toRadians(degrees) {
+    return degrees * (Math.PI / 180);
 }
