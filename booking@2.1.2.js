@@ -583,7 +583,6 @@ async function getIP(){
     fetch('https://api.ipify.org?format=json')
         .then(response => response.json())
         .then(data => {
-            console.log(data.ip);
             ipAddress = data.ip;
             getGeoLocation(ipAddress);
         })
@@ -609,6 +608,7 @@ function getGeoLocation(ipAddress) {
 }
 
 function arrangeCards(latitude,longitude) {
+    // Locations
     distances = []
 
     cards = document.querySelectorAll('[location-longitude]')
@@ -617,12 +617,58 @@ function arrangeCards(latitude,longitude) {
         distances.push([distance, card]);
     })
 
-    var sortedArray = distances.sort(function(a, b) { return a[0] - b[0]; });
+    sortedArray = distances.sort(function(a, b) { return a[0] - b[0]; });
 
     divs = [];
     sortedArray.forEach(sorted => divs.push(sorted[1]))
 
-    const container = document.getElementById('location-list');
+    container = document.getElementById('location-list');
+
+    divs.forEach(div => {
+        container.appendChild(div); // Append each div back to the container in the new order
+    });
+
+
+    // Doctors
+
+    distances = []
+
+    cards = document.querySelectorAll('[doctor-longitude-1]')
+    cards.forEach(card => {
+        if(card.attributes['doctor-latitude-1'].value  > 0) {
+
+            distance = calculateDistance(latitude, longitude, card.attributes['doctor-latitude-1'].value, card.attributes['doctor-longitude-1'].value);
+            distances.push([distance, card]);
+        }
+    })
+
+    cards = document.querySelectorAll('[doctor-longitude-2]')
+    cards.forEach(card => {
+        if(card.attributes['doctor-latitude-2'].value  > 0) {
+            distance = calculateDistance(latitude, longitude, card.attributes['doctor-latitude-2'].value, card.attributes['doctor-longitude-2'].value);
+            distances.push([distance, card]);
+
+        }
+    })
+
+    cards = document.querySelectorAll('[doctor-longitude-3]')
+    cards.forEach(card => {
+        if(card.attributes['doctor-latitude-3'].value  > 0) {
+            distance = calculateDistance(latitude, longitude, card.attributes['doctor-latitude-3'].value, card.attributes['doctor-longitude-3'].value);
+            distances.push([distance, card]);
+        }
+    })
+
+    sortedArray = distances.sort(function(a, b) { return a[0] - b[0]; });
+
+    divs = [];
+    sortedArray.forEach(sorted => {
+        if (!divs.includes(sorted[1])) {
+            divs.push(sorted[1])
+        }
+    })
+
+    container = document.getElementById('doctor-list');
 
     divs.forEach(div => {
         container.appendChild(div); // Append each div back to the container in the new order
