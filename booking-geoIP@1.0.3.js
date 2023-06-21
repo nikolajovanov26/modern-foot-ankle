@@ -33,6 +33,8 @@ getUserIPAddress()
         console.error(error);
     });
 
+sliders = document.querySelectorAll('[data-slider]')
+sliders.forEach(slider => slider.scrollLeft = 0)
 
 function getGeoLocation(ipAddress) {
     const accessKey = '5be6d10e55523101a347f33d8cc1fee7';
