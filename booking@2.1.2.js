@@ -1,4 +1,3 @@
-
 getIP();
 initData();
 iniNavButtons();
@@ -589,9 +588,6 @@ async function getIP(){
         .catch(error => {
             console.error('Error:', error);
         });
-
-    // ipAddress = '89.205.101.49'
-    // getGeoLocation(ipAddress);
 }
 
 function getGeoLocation(ipAddress) {
@@ -625,12 +621,11 @@ function arrangeCards(latitude,longitude) {
     container = document.getElementById('location-list');
 
     divs.forEach(div => {
-        container.appendChild(div); // Append each div back to the container in the new order
+        container.appendChild(div);
     });
 
 
     // Doctors
-
     distances = []
 
     cards = document.querySelectorAll('[doctor-longitude-1]')
@@ -671,12 +666,12 @@ function arrangeCards(latitude,longitude) {
     container = document.getElementById('doctor-list');
 
     divs.forEach(div => {
-        container.appendChild(div); // Append each div back to the container in the new order
+        container.appendChild(div);
     });
 }
 
 function calculateDistance(lat1, lon1, lat2, lon2) {
-    const earthRadius = 6371; // Radius of the Earth in kilometers
+    const earthRadius = 6371;
     const dLat = toRadians(lat2 - lat1);
     const dLon = toRadians(lon2 - lon1);
 
