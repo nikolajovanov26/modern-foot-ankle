@@ -33,9 +33,6 @@ getUserIPAddress()
         console.error(error);
     });
 
-sliders = document.querySelectorAll('[data-slider]')
-sliders.forEach(slider => slider.scrollLeft = 0)
-
 function getGeoLocation(ipAddress) {
     const accessKey = '5be6d10e55523101a347f33d8cc1fee7';
     fetch('https://api.ipstack.com/' + ipAddress + '?access_key=' + accessKey)
@@ -114,6 +111,9 @@ function arrangeCards(latitude,longitude) {
     divs.forEach(div => {
         container.appendChild(div);
     });
+
+    sliders = document.querySelectorAll('[data-slider]')
+    sliders.forEach(slider => slider.scrollLeft = 0)
 }
 
 function calculateDistance(lat1, lon1, lat2, lon2) {
