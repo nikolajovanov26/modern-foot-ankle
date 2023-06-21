@@ -536,6 +536,24 @@ function checkIncomingData() {
         navigateTab(doctorsTab)
         populateSidebar()
 
+        doctorCards.forEach(card => {
+            card.querySelectorAll('[doctor-hours-tab]').forEach(tab => {
+                if (tab.attributes['doctor-hours-id'].value.includes(locationId)) {
+                    tab.parentElement.classList.add('active')
+                } else {
+                    tab.parentElement.classList.remove('active')
+                }
+            })
+
+            card.querySelectorAll('[location-hours]').forEach(hours => {
+                if (hours.attributes['location-hours'].value.includes(locationId)) {
+                    show(hours)
+                } else {
+                    hide(hours)
+                }
+            })
+        })
+
         return;
     }
 }
