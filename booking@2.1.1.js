@@ -474,6 +474,7 @@ function getIframe() {
                     frameID = f.iframe
                     url = 'https://drchrono.com/scheduling/offices/' + frameID
                     document.querySelector('.booking-iframe iframe').src = url
+                    document.querySelector('.booking-iframe iframe').reload(true);
                 }
             })
         }
