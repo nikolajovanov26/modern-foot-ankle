@@ -10,7 +10,7 @@ fetch('https://api.ipify.org?format=json')
 
 function getGeoLocation(ipAddress) {
     const accessKey = '5be6d10e55523101a347f33d8cc1fee7';
-    fetch('http://api.ipstack.com/' + ipAddress + '?access_key=' + accessKey)
+    fetch('https://api.ipstack.com/' + ipAddress + '?access_key=' + accessKey)
         .then(response => response.json())
         .then(data => {
             const { latitude, longitude } = data;
