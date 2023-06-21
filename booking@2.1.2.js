@@ -320,6 +320,7 @@ function populateSidebar() {
     sidebarLocationPlaceholder.querySelector('.booking-item-title').innerHTML = 'Select Location'
     sidebarDoctorPlaceholder.querySelector('img').src = 'https://uploads-ssl.webflow.com/640801637e0e2c44c99a32f0/646a28190847ecf19cb661ac_supervised_user_circle.svg';
     sidebarDoctorPlaceholder.querySelector('.booking-item-title').innerHTML = 'Select Doctor'
+    sidebarDoctorPlaceholder.querySelector('.booking-item-subtitle').innerHTML  = 'Select Location'
 
     show(sidebarLocationPlaceholder)
     show(sidebarDoctorPlaceholder)
