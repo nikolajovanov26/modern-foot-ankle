@@ -1,37 +1,12 @@
-function getUserIPAddress() {
-    return new Promise(function(resolve, reject) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'https://api.ipify.org?format=json', true);
-
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                try {
-                    var response = JSON.parse(xhr.responseText);
-                    resolve(response.ip);
-                } catch (error) {
-                    reject(error);
-                }
-            } else {
-                reject(new Error('Failed to fetch IP address'));
-            }
-        };
-
-        xhr.onerror = function() {
-            reject(new Error('Failed to make the request'));
-        };
-
-        xhr.send();
-    });
+function getIP(url) {
+    return fetch(url).then(res => res.text());
 }
 
-// Usage
-getUserIPAddress()
-    .then(function(ipAddress) {
-        getGeoLocation(ipAddress);
-    })
-    .catch(function(error) {
-        console.error(error);
-    });
+getIP('https://www.cloudflare.com/cdn-cgi/trace').then(data => {
+    let ipRegex = /[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/
+    let ipAddress = data.match(ipRegex)[0];
+    getGeoLocation(ipAddress);
+});
 
 function getGeoLocation(ipAddress) {
     const accessKey = '5be6d10e55523101a347f33d8cc1fee7';
