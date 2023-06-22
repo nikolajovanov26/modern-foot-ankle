@@ -1,14 +1,11 @@
-const xhr = new XMLHttpRequest();
-
 xhr.open('GET', 'https://api.ipbase.com/v2/info', true);
 xhr.setRequestHeader('apikey', 'zZLAadVVbTPIcB5OyxPHNomJw5gv7a8fGgCxYCFU');
 
 xhr.onload = function() {
     if (xhr.status === 200) {
         const response = JSON.parse(xhr.responseText);
-        latitude = response.data.location.latitude
-        longitude = response.data.location.longitude
-        arrangeCards(latitude,longitude);
+        ipAddress = response.data.ip
+        getGeoLocation(ipAddress)
     } else {
         console.error('Request failed with status:', xhr.status);
     }
@@ -19,6 +16,19 @@ xhr.onerror = function() {
 };
 
 xhr.send();
+
+function getGeoLocation(ipAddress) {
+    const accessKey = '5be6d10e55523101a347f33d8cc1fee7';
+    fetch('https://api.ipstack.com/' + ipAddress + '?access_key=' + accessKey)
+        .then(response => response.json())
+        .then(data => {
+            const { latitude, longitude } = data;
+            arrangeCards(latitude,longitude);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
 
 function arrangeCards(latitude,longitude) {
     // Locations
