@@ -1,25 +1,24 @@
-function getIP(url) {
-    return fetch(url).then(res => res.text());
-}
+const xhr = new XMLHttpRequest();
 
-getIP('https://www.cloudflare.com/cdn-cgi/trace').then(data => {
-    let ipRegex = /[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/
-    let ipAddress = data.match(ipRegex)[0];
-    getGeoLocation(ipAddress);
-});
+xhr.open('GET', 'https://api.ipbase.com/v2/info', true);
+xhr.setRequestHeader('apikey', 'zZLAadVVbTPIcB5OyxPHNomJw5gv7a8fGgCxYCFU');
 
-function getGeoLocation(ipAddress) {
-    const accessKey = '5be6d10e55523101a347f33d8cc1fee7';
-    fetch('https://api.ipstack.com/' + ipAddress + '?access_key=' + accessKey)
-        .then(response => response.json())
-        .then(data => {
-            const { latitude, longitude } = data;
-            arrangeCards(latitude,longitude);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-}
+xhr.onload = function() {
+    if (xhr.status === 200) {
+        const response = JSON.parse(xhr.responseText);
+        latitude = response.data.location.latitude
+        longitude = response.data.location.longitude
+        arrangeCards(latitude,longitude);
+    } else {
+        console.error('Request failed with status:', xhr.status);
+    }
+};
+
+xhr.onerror = function() {
+    console.error('Request failed');
+};
+
+xhr.send();
 
 function arrangeCards(latitude,longitude) {
     // Locations
