@@ -197,6 +197,7 @@ function iniNavButtons() {
         switch (findActiveTab()) {
             case 'starter-tab':
                 location.href = '/'
+                resetDoctorHours()
                 break;
             case 'all-doctors-tab':
                 if (locationId) {
@@ -209,6 +210,7 @@ function iniNavButtons() {
                 } else {
                     navigateTab(starterTab)
                 }
+                resetDoctorHours()
                 break;
             case 'all-locations-tab':
                 if (doctorId) {
@@ -223,6 +225,7 @@ function iniNavButtons() {
                     sidebarDoctorPlaceholder.classList.remove('active')
                     navigateTab(starterTab)
                 }
+                resetDoctorHours()
                 break;
             case 'iframe-tab':
                 if (prev === 'ref') {
@@ -245,7 +248,6 @@ function iniNavButtons() {
                 }
                 break;
         }
-        resetDoctorHours()
     })
 }
 
