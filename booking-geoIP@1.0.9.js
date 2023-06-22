@@ -1,3 +1,5 @@
+const xhr = new XMLHttpRequest();
+
 xhr.open('GET', 'https://api.ipbase.com/v2/info', true);
 xhr.setRequestHeader('apikey', 'zZLAadVVbTPIcB5OyxPHNomJw5gv7a8fGgCxYCFU');
 
