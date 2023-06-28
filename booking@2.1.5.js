@@ -332,7 +332,6 @@ function populateSidebar() {
 
 function navigateTab(newTab) {
     starterSidebarTabs()
-    window.scrollTo({top: 0, behavior: 'smooth'})
 
     prev = findActiveTab()
 
@@ -366,6 +365,10 @@ function navigateTab(newTab) {
         show(starterText)
         hide(backButton)
     }
+
+    setTimeout(() => {
+        document.querySelector('#topScroll').scrollIntoView({behavior: 'smooth'})
+    }, '50');
 }
 
 function navigateDoctorRegion(newRegion) {
@@ -475,6 +478,7 @@ function getIframe() {
                     frameID = f.iframe
                     url = 'https://drchrono.com/scheduling/offices/' + frameID
                     document.querySelector('.booking-iframe iframe').src = url
+
                     document.querySelector('.booking-iframe iframe').reload(true);
                 }
             })
