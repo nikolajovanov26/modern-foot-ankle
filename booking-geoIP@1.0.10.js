@@ -20,11 +20,12 @@ xhr.onerror = function() {
 xhr.send();
 
 function getGeoLocation(ipAddress) {
-    const accessKey = '5be6d10e55523101a347f33d8cc1fee7';
-    fetch('https://api.ipstack.com/' + ipAddress + '?access_key=' + accessKey)
+    const accessKey = 'a6a5xj3ji02xcdct';
+    fetch('https://api.ipregistry.co/' + ipAddress + '?key=' + accessKey)
         .then(response => response.json())
         .then(data => {
-            const { latitude, longitude } = data;
+            latitude = data['location']['latitude'];
+            longitude = data['location']['longitude'];
             arrangeCards(latitude,longitude);
         })
         .catch(error => {
