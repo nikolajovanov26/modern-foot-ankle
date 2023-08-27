@@ -20,7 +20,7 @@ xhr.onerror = function() {
 xhr.send();
 
 function getGeoLocation(ipAddress) {
-    const accessKey = 'a6a5xj3ji02xcdct';
+    const accessKey = '051shr6kh7im6znm';
     fetch('https://api.ipregistry.co/' + ipAddress + '?key=' + accessKey)
         .then(response => response.json())
         .then(data => {
